@@ -1,0 +1,9 @@
+[project]
+name = "restaurant_manager"
+version = "0.1.0"
+description = "Amar's Restaurant Ordering and Management System."
+authors = [
+    { name = "Nazrin Ikhsan bin Shah Rizal" },
+    { name = "Sarvanavel Prakash" },
+    { name = "Lim Jun Hong" }
+]
