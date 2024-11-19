@@ -1,6 +1,5 @@
 import hashlib
 import json
-from menu import OptionMenu
 import getpass
 
 class Account:

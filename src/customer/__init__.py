@@ -1,4 +1,4 @@
-from ..util.accounts import AccountManager
+from util.accounts import AccountManager
 
 def init():
     accounts = AccountManager()
