@@ -14,6 +14,18 @@ class Account:
         self.username = username
         self.passwordHash = passwordHash
 
+# Run serialization of the Account class
+class AccountEncoder(json.JSONEncoder):
+    def default(self, o: Account):
+        return o.__dict__
+
+def decode_account(obj: dict) -> Account:
+    account = Account(obj["accountType"], obj["username"], obj["passwordHash"])
+    account.name = obj["name"]
+    account.address = obj["address"]
+
+    return account
+
 class AccountManager:
     accounts: list[Account] = []
 
@@ -22,12 +34,12 @@ class AccountManager:
 
     def save(self):
         with open("accounts.json", "w") as file:
-            json.dump(self.accounts, file, indent = 4)
+            json.dump(self.accounts, file, indent = 4, cls = AccountEncoder)
 
     def load(self):
         try:
             with open("accounts.json", "r") as file:
-                data = json.load(file)
+                data = json.load(file, object_hook = decode_account)
                 self.accounts = data
         except FileNotFoundError:
             # Ignore non-existing files
