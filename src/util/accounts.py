@@ -36,7 +36,7 @@ class AccountManager:
     def get_account(self, accountType: str, username: str) -> Account | None:
         for account in self.accounts:
             # Find account that matches the type and username
-            if account.accountType == accountType and account.username == account.username:
+            if account.accountType == accountType and account.username == username:
                 return account
 
         # Otherwise, return None if no accounts could be found.
