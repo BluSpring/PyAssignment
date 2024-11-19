@@ -47,6 +47,13 @@ class AccountManager:
         if self.get_account(accountType, username) is not None:
             raise Exception(f"Account with username {username} already exists!")
 
+        # Validate usernames and passwords
+        if " " in username or "\n" in username:
+            raise Exception("Invalid username! Username must not contain spaces or line breaks!")
+
+        if len(password) < 8:
+            raise Exception("Password must be longer than 8 characters!")
+
         # Hash the password as SHA256, for security.
         hashedPassword = hashlib.sha256(password.encode()).hexdigest()
         account = Account(accountType, username, hashedPassword)
