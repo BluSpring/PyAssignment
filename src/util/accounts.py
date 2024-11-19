@@ -81,7 +81,11 @@ class AccountManager:
 
     def create_register_menu(self, accountType: str) -> Account:
         username = input("Insert a username: ")
-        password = getpass.getpass("Password: ")
+        password = getpass.getpass("Insert a password: ")
+        verify_password = getpass.getpass("Confirm your password: ")
+
+        if verify_password != password:
+            raise Exception("Password and confirm password fields did not match!")
 
         account = self.create_account(accountType, username, password)
         print()

@@ -11,6 +11,7 @@ class OptionMenu:
     name: str = ""
     description: str = ""
     _options: list[tuple[str, Callable]] = []
+    automaticallyExit: bool = False
 
     def __init__(self: Self, name: str):
         self.name = name
@@ -54,9 +55,12 @@ class OptionMenu:
                 print()
                 option[1]() # Invoke the callable option
 
-            input("Press enter to continue...")
-            _clear_screen() # Clear the terminal window.
-            self.process() # After the option completes, re-run this function until the user exits.
+            if not self.automaticallyExit:
+                input("Press enter to continue...")
+                _clear_screen()  # Clear the terminal window.
+                self.process() # After the option completes, re-run this function until the user exits.
+            else:
+                _clear_screen()
         except ValueError: # If the user inputs an invalid number, just process it again.
             print("Invalid number!")
             self.process()
