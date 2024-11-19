@@ -6,6 +6,8 @@ class Account:
     accountType: str = ""
     username: str = ""
     passwordHash: str = ""
+    name: str = ""
+    address: str = ""
 
     def __init__(self, accountType: str, username: str, passwordHash: str):
         self.accountType = accountType
@@ -55,7 +57,7 @@ class AccountManager:
 
         return account
 
-    def create_menu(self, accountType: str) -> Account:
+    def create_login_menu(self, accountType: str) -> Account:
         print(f"Logging in as {accountType}.")
         username = input("Username: ")
         account = self.get_account(accountType, username)
