@@ -64,6 +64,15 @@ class AccountManager:
 
         return account
 
+    def create_register_menu(self, accountType: str) -> Account:
+        username = input("Insert a username: ")
+        password = getpass.getpass("Password: ")
+
+        account = self.create_account(accountType, username, password)
+        print()
+        print(f"Successfully created account with username {username}!")
+        return account
+
     def create_login_menu(self, accountType: str) -> Account:
         print(f"Logging in as {accountType}.")
         username = input("Username: ")
