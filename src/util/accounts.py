@@ -13,6 +13,8 @@ class Account:
         self.accountType = accountType
         self.username = username
         self.passwordHash = passwordHash
+        self.name = ""
+        self.address = ""
 
 # Run serialization of the Account class
 class AccountEncoder(json.JSONEncoder):
@@ -30,6 +32,7 @@ class AccountManager:
     accounts: list[Account] = []
 
     def __init__(self):
+        self.accounts = []
         self.load()
 
     def save(self):

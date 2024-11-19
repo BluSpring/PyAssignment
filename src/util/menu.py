@@ -14,6 +14,8 @@ class OptionMenu:
 
     def __init__(self: Self, name: str):
         self.name = name
+        self.description = ""
+        self._options = []
 
     # Allows us to easily add new options to the menu.
     def add_option(self: Self, name: str, option: Callable) -> Self:
