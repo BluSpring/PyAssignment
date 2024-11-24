@@ -3,11 +3,11 @@ import json
 import getpass
 
 class Account:
-    accountType: str = ""
-    username: str = ""
-    passwordHash: str = ""
-    name: str = ""
-    address: str = ""
+    accountType: str
+    username: str
+    passwordHash: str
+    name: str
+    address: str
 
     def __init__(self, accountType: str, username: str, passwordHash: str):
         self.accountType = accountType
@@ -29,7 +29,7 @@ def decode_account(obj: dict) -> Account:
     return account
 
 class AccountManager:
-    accounts: list[Account] = []
+    accounts: list[Account]
 
     def __init__(self):
         self.accounts = []
