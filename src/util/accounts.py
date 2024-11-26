@@ -1,6 +1,7 @@
+import getpass
 import hashlib
 import json
-import getpass
+
 
 class Account:
     accountType: str
@@ -28,6 +29,11 @@ def decode_account(obj: dict) -> Account:
 
     return account
 
+# Make sure the account type is valid.
+def validate_account_type(accountType: str):
+    if accountType != "manager" or accountType != "customer" or accountType != "chef" or accountType != "cashier":
+        raise RuntimeError(f"Invalid account type {accountType}!")
+
 class AccountManager:
     accounts: list[Account]
 
@@ -49,15 +55,30 @@ class AccountManager:
             pass
 
     def get_account(self, accountType: str, username: str) -> Account | None:
-        for account in self.accounts:
-            # Find account that matches the type and username
-            if account.accountType == accountType and account.username == username:
+        validate_account_type(accountType)
+
+        for account in self.get_accounts_of_type(accountType):
+            # Find account that matches the username
+            if account.username == username:
                 return account
 
         # Otherwise, return None if no accounts could be found.
         return None
 
+    # Get all accounts that match the account type.
+    def get_accounts_of_type(self, accountType: str) -> list[Account]:
+        validate_account_type(accountType)
+        accounts = []
+
+        for account in self.accounts:
+            if account.accountType == accountType:
+                accounts.append(account)
+
+        return accounts
+
     def create_account(self, accountType: str, username: str, password: str) -> Account:
+        validate_account_type(accountType)
+
         # Check if any accounts with the type and username already exist.
         if self.get_account(accountType, username) is not None:
             raise Exception(f"Account with username {username} already exists!")
@@ -80,6 +101,8 @@ class AccountManager:
         return account
 
     def create_register_menu(self, accountType: str) -> Account:
+        validate_account_type(accountType)
+
         username = input("Insert a username: ")
         password = getpass.getpass("Insert a password: ")
         verify_password = getpass.getpass("Confirm your password: ")
@@ -93,6 +116,8 @@ class AccountManager:
         return account
 
     def create_login_menu(self, accountType: str) -> Account:
+        validate_account_type(accountType)
+
         print(f"Logging in as {accountType}.")
         username = input("Username: ")
         account = self.get_account(accountType, username)
