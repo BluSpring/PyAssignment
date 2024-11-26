@@ -31,7 +31,7 @@ def decode_account(obj: dict) -> Account:
 
 # Make sure the account type is valid.
 def validate_account_type(accountType: str):
-    if accountType != "manager" or accountType != "customer" or accountType != "chef" or accountType != "cashier":
+    if accountType != "manager" and accountType != "customer" and accountType != "chef" and accountType != "cashier":
         raise RuntimeError(f"Invalid account type {accountType}!")
 
 class AccountManager:
