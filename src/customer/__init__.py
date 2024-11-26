@@ -1,10 +1,11 @@
 import customer.account_management
+import customer.cart_management
 import customer.dishes_review
 import customer.order_tracking
-import customer.cart_management
 import customer.product_browsing
 from util.accounts import AccountManager, Account
 from util.menu import OptionMenu
+
 
 # Python does not allow setting variables inside lambdas, so we have to work around it with this.
 def create_login(accounts: AccountManager, accountWorkaround: dict):
@@ -23,8 +24,8 @@ def init():
         try:
             menu = OptionMenu("Customer System")
             menu.description = """
-                Welcome, customer, to Amar's Restaurant!
-                Please log into your account, or create a new account, to be able to use our services.
+Welcome, customer, to Amar's Restaurant!
+Please log into your account, or create a new account, to be able to use our services.
             """
             menu.automaticallyExit = True
 
@@ -40,8 +41,8 @@ def init():
 
     menu = OptionMenu("Customer System")
     menu.description = """
-    Welcome, customer, to Amar's Restaurant!
-    Here, you can manage your account, go through our products, track your orders, and submit reviews about our dishes!
+Welcome, customer, to Amar's Restaurant!
+Here, you can manage your account, go through our products, track your orders, and submit reviews about our dishes!
     """
     menu.add_option("Account Management", lambda: account_management.init(account))
     menu.add_option("Product Browsing", lambda: product_browsing.init(account))
