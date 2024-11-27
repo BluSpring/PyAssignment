@@ -44,7 +44,7 @@ Please log into your account, or create a new account, to be able to use our ser
 Welcome, customer, to Amar's Restaurant!
 Here, you can manage your account, go through our products, track your orders, and submit reviews about our dishes!
     """
-    menu.add_option("Account Management", lambda: account_management.init(account))
+    menu.add_option("Account Management", lambda: account_management.init(accounts, account))
     menu.add_option("Product Browsing", lambda: product_browsing.init(account))
     menu.add_option("Cart Management", lambda: cart_management.init(account))
     menu.add_option("Order Tracking", lambda: order_tracking.init(account))

@@ -1,8 +1,7 @@
 import getpass
-import hashlib
 import math
 
-from util.accounts import Account, AccountManager
+from util.accounts import Account, AccountManager, validate_password, hash_password
 from util.menu import OptionMenu
 from util.utils import proper_case
 
@@ -58,16 +57,15 @@ def change_account_password(accountManager: AccountManager, accounts: list[Accou
     print(f"Changing password for username {account.username}.")
 
     password = getpass.getpass("Insert a new password: ")
-    verify_password = getpass.getpass("Confirm new password: ")
+    validate_password(password)
 
-    if len(password) < 8:
-        raise Exception("Password must be longer than 8 characters!")
+    verify_password = getpass.getpass("Confirm new password: ")
 
     if verify_password != password:
         raise Exception("Password and confirm password fields did not match!")
 
     # Hash the password as SHA256, for security.
-    hashedPassword = hashlib.sha256(password.encode()).hexdigest()
+    hashedPassword = hash_password(password)
 
     account.passwordHash = hashedPassword
     accountManager.save()

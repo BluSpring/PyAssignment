@@ -34,6 +34,18 @@ def validate_account_type(accountType: str):
     if accountType != "manager" and accountType != "customer" and accountType != "chef" and accountType != "cashier":
         raise RuntimeError(f"Invalid account type {accountType}!")
 
+def validate_password(password: str):
+    password = password.strip()
+
+    if len(password) < 8:
+        raise Exception("Password must be longer than 8 characters!")
+
+    if " " in password or "\n" in password:
+        raise Exception("Invalid password! Password must not contain spaces or line breaks!")
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
 class AccountManager:
     accounts: list[Account]
 
@@ -87,11 +99,10 @@ class AccountManager:
         if " " in username or "\n" in username:
             raise Exception("Invalid username! Username must not contain spaces or line breaks!")
 
-        if len(password) < 8:
-            raise Exception("Password must be longer than 8 characters!")
+        validate_password(password)
 
         # Hash the password as SHA256, for security.
-        hashedPassword = hashlib.sha256(password.encode()).hexdigest()
+        hashedPassword = hash_password(password)
         account = Account(accountType, username, hashedPassword)
 
         # Add account to the accounts list.
@@ -127,7 +138,7 @@ class AccountManager:
 
         password = getpass.getpass("Password: ")
 
-        if hashlib.sha256(password.encode()).hexdigest() != account.passwordHash:
+        if hash_password(password) != account.passwordHash:
             raise Exception("Invalid password!")
 
         print()
