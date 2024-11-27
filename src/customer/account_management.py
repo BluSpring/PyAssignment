@@ -17,6 +17,7 @@ def change_name(accountManager: AccountManager, account: Account):
     print("Successfully changed name.")
     print(f"Old: {oldName}")
     print(f"New: {newName}")
+    init(accountManager, account)
 
 def change_password(accountManager: AccountManager, account: Account):
     oldPassword = getpass.getpass("Insert your old password: ")
@@ -36,6 +37,7 @@ def change_password(accountManager: AccountManager, account: Account):
     accountManager.save()
 
     print("Successfully changed password.")
+    init(accountManager, account)
 
 def change_address(accountManager: AccountManager, account: Account):
     newAddress = input("Insert a new address: ").strip()
@@ -51,8 +53,11 @@ def change_address(accountManager: AccountManager, account: Account):
     print(f"Old: {oldAddress}")
     print(f"New: {newAddress}")
 
+    init(accountManager, account)
+
 def init(accountManager: AccountManager, account: Account):
     menu = OptionMenu("Account Manager")
+    menu.automaticallyExit = True
     menu.description = "You can manage your own account's personal information here."
     menu.description += f"\nUsername: {account.username}"
     menu.description += f"\nName: {account.name if account.name != '' else '(none)'}"
