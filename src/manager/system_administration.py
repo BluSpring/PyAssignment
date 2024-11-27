@@ -16,6 +16,7 @@ def display_accounts(accountManager: AccountManager, accountType: str, accounts:
     totalAccountsToDisplay = min(10, len(accounts) - accountsStart)
 
     accountMenu = OptionMenu("Accounts ({proper_case(accountType)})")
+    accountMenu.automaticallyExit = True
     accountMenu.description = ""
 
     for i in range(accountsStart, accountsStart + totalAccountsToDisplay):

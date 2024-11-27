@@ -5,6 +5,7 @@ from util.menu import OptionMenu
 from util.orders import OrderManager, Order
 from util.utils import proper_case
 
+
 def display_orders(orderManager: OrderManager, orders: list[Order], page: int):
     maxPages = math.floor(len(orders) / 10)
 
@@ -15,6 +16,7 @@ def display_orders(orderManager: OrderManager, orders: list[Order], page: int):
     totalOrdersToDisplay = min(10, len(orders) - ordersStart)
 
     orderMenu = OptionMenu("Tracked Orders")
+    orderMenu.automaticallyExit = True
     orderMenu.description = f"""
         In this menu, you can track the status of all of your orders, and cancel any unfulfilled orders.
 
