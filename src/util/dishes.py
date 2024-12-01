@@ -4,18 +4,20 @@ class Dish:
     dishName: str
     items: list[str] # List of InventoryItem names
     price: float
+    recipe: list[str]
 
-    def __init__(self, dishName: str, items: list[str], price: float):
+    def __init__(self, dishName: str, items: list[str], price: float, recipe: list[str]):
         self.dishName = dishName
         self.items = items
         self.price = price
+        self.recipe = recipe
 
 class DishEncoder(json.JSONEncoder):
     def default(self, o: Dish):
         return o.__dict__
 
 def decode_dish(obj: dict) -> Dish:
-    return Dish(obj["dishName"], obj["items"], obj["price"])
+    return Dish(obj["dishName"], obj["items"], obj["price"], obj["recipe"])
 
 class DishManager:
     dishes: list[Dish]
