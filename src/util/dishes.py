@@ -1,5 +1,8 @@
 import json
 
+from util.inventory import InventoryManager
+
+
 class Dish:
     dishName: str
     items: list[str] # List of InventoryItem names
@@ -45,3 +48,36 @@ class DishManager:
                 return item
 
         return None
+
+    # Similar to get_dish, except is case-insensitive.
+    def get_dish_lenient(self, name: str) -> Dish | None:
+        for dish in self.dishes:
+            if dish.dishName.lower().strip() == name.lower().strip():
+                return dish
+
+        return None
+
+    # Check if a dish is available by iterating through the inventory and
+    # seeing if there is enough of the item.
+    def is_dish_available(self, dish: Dish) -> bool:
+        inventory = InventoryManager()
+        items = {}
+
+        # It's possible to have multiple of the same item in the list,
+        # so count them and assign them to a dict with the item name as the key,
+        # and the amount as the value.
+        for itemName in dish.items:
+            if items[itemName] is not None:
+                items[itemName] = items[itemName] + 1
+            else:
+                items[itemName] = 1
+
+        # Check if there are enough of every item in the inventory.
+        for itemName in items:
+            amount = items[itemName]
+            item = inventory.get_item(itemName)
+
+            if item.amount < amount:
+                return False
+
+        return True

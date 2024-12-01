@@ -1,8 +1,10 @@
 from util.accounts import Account
+from util.dishes import DishManager
+
 
 # Product Browsing - Customer
 class ProductBrowser:
-    def _init_(self, products):
+    def __init__(self, products):
         self.products = products
 
     def browse_products(self):
@@ -11,4 +13,11 @@ class ProductBrowser:
             print(f"- {product}")
 
 def init(account: Account):
-    pass
+    dishManager = DishManager()
+    products = []
+
+    for dish in dishManager.dishes:
+        products.append(f"{dish.dishName} - ${dish.price}")
+
+    productBrowser = ProductBrowser(products)
+    productBrowser.browse_products()
