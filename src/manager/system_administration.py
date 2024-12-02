@@ -15,7 +15,7 @@ def display_accounts(accountManager: AccountManager, accountType: str, accounts:
     # Only list up to a max of 10 orders.
     totalAccountsToDisplay = min(10, len(accounts) - accountsStart)
 
-    accountMenu = OptionMenu("Accounts ({proper_case(accountType)})")
+    accountMenu = OptionMenu(f"Accounts ({proper_case(accountType)})")
     accountMenu.automaticallyExit = True
     accountMenu.description = ""
 
