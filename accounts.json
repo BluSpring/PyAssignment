@@ -5,5 +5,19 @@
         "passwordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
         "name": "",
         "address": ""
+    },
+    {
+        "accountType": "customer",
+        "username": "BluSpring",
+        "passwordHash": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
+        "name": "Naz Ikhsan",
+        "address": ""
+    },
+    {
+        "accountType": "customer",
+        "username": "Test1",
+        "passwordHash": "6559038a01c005df20cc8a896e00c8b8a035a824f3466f52c57b9f0e0a955fe6",
+        "name": "Test Questionmark",
+        "address": ""
     }
 ]
