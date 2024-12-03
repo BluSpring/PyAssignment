@@ -62,6 +62,14 @@ class FinancialManager(Manager[Finances]):
             # Ignore non-existing files
             pass
 
+    def get_finances(self, month: int, year: int) -> Finances:
+        key = get_formatted_key(month, year)
+
+        if not key in self.finances:
+            raise Exception(f"Financial records for {get_formatted_month(month)} {year} do not exist!")
+
+        return self.finances[key]
+
     def get_current_finances(self) -> Finances:
         key = get_formatted_key(get_month(), get_year())
 
