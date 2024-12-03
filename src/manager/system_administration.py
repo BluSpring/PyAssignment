@@ -1,46 +1,20 @@
 import getpass
-import math
 
 from util.accounts import Account, AccountManager, validate_password, hash_password
 from util.menu import OptionMenu
+from util.pagination import create_pagination
 from util.utils import proper_case
 
 
-def display_accounts(accountManager: AccountManager, accountType: str, accounts: list[Account], page: int):
-    maxPages = math.floor(len(accounts) / 10)
-
-    # The index to use for printing the orders array
-    accountsStart = page * 10
-
-    # Only list up to a max of 10 orders.
-    totalAccountsToDisplay = min(10, len(accounts) - accountsStart)
-
-    accountMenu = OptionMenu(f"Accounts ({proper_case(accountType)})")
-    accountMenu.automaticallyExit = True
-    accountMenu.description = ""
-
-    for i in range(accountsStart, accountsStart + totalAccountsToDisplay):
-        account = accounts[i]
-        accountMenu.description += f"\n  {i + 1}. {account.username} - {proper_case(account.name)}"
-
-    accountMenu.description += f"\n\nShowing {totalAccountsToDisplay} items out of {len(accounts)}."
-    accountMenu.description += f"\nPage {page + 1} / {maxPages}"
-
+def add_additional_options(accountMenu: OptionMenu, accountManager: AccountManager, accounts: list[Account]):
     accountMenu.add_option("View Account Information", lambda: view_account(accounts))
     accountMenu.add_option("Change Password", lambda: change_account_password(accountManager, accounts))
     accountMenu.add_option("Delete Account", lambda: delete_account(accountManager, accounts))
 
-    if page > 0:
-        accountMenu.add_option("Previous Page", lambda: display_accounts(accountManager, accountType, accounts, page - 1))
-
-    if page < maxPages - 1:
-        accountMenu.add_option("Next Page", lambda: display_accounts(accountManager, accountType, accounts, page + 1))
-
-    accountMenu.process()
-
 def handle_type(accountManager: AccountManager, accountType: str):
     accounts = accountManager.get_accounts_of_type(accountType)
-    display_accounts(accountManager, accountType, accounts, 0)
+
+    create_pagination(accountManager, f"Accounts ({proper_case(accountType)})", accounts, (lambda account: f"{account.username} - {proper_case(account.name)}"), (lambda menu: add_additional_options(menu, accountManager, accounts)), 0)
 
 def view_account(accounts: list[Account]):
     index = int(input("Insert the account ID you want to view: ")) - 1

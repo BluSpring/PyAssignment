@@ -1,49 +1,17 @@
-import math
-
 from util.accounts import Account
 from util.dishes import DishManager
 from util.menu import OptionMenu
+from util.pagination import create_pagination
 
-
-def display_dishes(dishManager: DishManager, page: int):
-    maxPages = math.floor(len(dishManager.dishes) / 10)
-
-    # The index to use for printing the orders array
-    itemsStart = page * 10
-
-    # Only list up to a max of 10 orders.
-    totalDishesToDisplay = min(10, len(dishManager.dishes) - itemsStart)
-
-    productsMenu = OptionMenu(f"Recipe Management")
-    productsMenu.automaticallyExit = True
-    productsMenu.description = ""
-
-    for i in range(itemsStart, itemsStart + totalDishesToDisplay):
-        dish = dishManager.dishes[i]
-        productsMenu.description += f"\n  {i + 1}. {dish.dishName} - {len(dish.recipe)} steps"
-
-    productsMenu.description += f"\n\nShowing {totalDishesToDisplay} items out of {len(dishManager.dishes)}."
-    productsMenu.description += f"\nPage {page + 1} / {maxPages}"
-
-    productsMenu.add_option("View Recipe", lambda: view_recipe(dishManager))
-    productsMenu.add_option("Add Recipe Instruction", lambda: add_recipe(dishManager))
-    productsMenu.add_option("Edit Recipe Instruction", lambda: edit_recipe(dishManager))
-    productsMenu.add_option("Remove Recipe Instruction", lambda: remove_recipe(dishManager))
-
-    if page > 0:
-        productsMenu.add_option("Previous Page", lambda: display_dishes(dishManager, page - 1))
-
-    if page < maxPages - 1:
-        productsMenu.add_option("Next Page", lambda: display_dishes(dishManager, page + 1))
-
-    productsMenu.process()
+def add_additional_options(menu: OptionMenu, dishManager: DishManager):
+    menu.add_option("View Recipe", lambda: view_recipe(dishManager))
+    menu.add_option("Add Recipe Instruction", lambda: add_recipe(dishManager))
+    menu.add_option("Edit Recipe Instruction", lambda: edit_recipe(dishManager))
+    menu.add_option("Remove Recipe Instruction", lambda: remove_recipe(dishManager))
 
 def init(account: Account):
     dishManager = DishManager()
-
-    display_dishes(dishManager, 0)
-
-    pass
+    create_pagination(dishManager, "Recipe Management", dishManager.dishes, (lambda dish: f"{dish.dishName} - {len(dish.recipe)} steps"), lambda menu: add_additional_options(menu, dishManager), 0)
 
 def view_recipe(dishManager: DishManager):
     index = int(input("Insert a dish number to view: ")) - 1

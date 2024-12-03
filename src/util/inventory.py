@@ -1,5 +1,8 @@
 import json
 
+from util.pagination import Manager
+
+
 class InventoryItem:
     itemName: str
     price: float
@@ -17,7 +20,7 @@ class ItemEncoder(json.JSONEncoder):
 def decode_item(obj: dict) -> InventoryItem:
     return InventoryItem(obj["itemName"], obj["price"], obj["amount"])
 
-class InventoryManager:
+class InventoryManager(Manager[InventoryItem]):
     items: list[InventoryItem]
 
     def __init__(self):

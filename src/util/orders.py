@@ -1,9 +1,10 @@
 import json
-import time
 
 from util.accounts import Account
 from util.id_manager import IdManager
+from util.pagination import Manager
 from util.utils import get_current_time_millis
+
 
 class Order:
     username: str # Username of the account that placed the order
@@ -43,7 +44,7 @@ def decode_order(obj: dict) -> Order:
 
     return order
 
-class OrderManager:
+class OrderManager(Manager[Order]):
     idManager: IdManager
     orders: list[Order]
     currentId: int

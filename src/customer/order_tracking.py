@@ -1,47 +1,12 @@
-import math
-
 from util.accounts import Account
+from util.dishes import DishManager
 from util.menu import OptionMenu
 from util.orders import OrderManager, Order
+from util.pagination import create_pagination
 from util.utils import proper_case
 
-
-def display_orders(orderManager: OrderManager, orders: list[Order], page: int):
-    maxPages = math.floor(len(orders) / 10)
-
-    # The index to use for printing the orders array
-    ordersStart = page * 10
-
-    # Only list up to a max of 10 orders.
-    totalOrdersToDisplay = min(10, len(orders) - ordersStart)
-
-    orderMenu = OptionMenu("Tracked Orders")
-    orderMenu.automaticallyExit = True
-    orderMenu.description = f"""
-        In this menu, you can track the status of all of your orders, and cancel any unfulfilled orders.
-
-        Orders:
-        """
-
-    for i in range(ordersStart, ordersStart + totalOrdersToDisplay):
-        order = orders[i]
-        orderMenu.description += f"\n  Order #{order.orderId} - {proper_case(order.status)}"
-
-    orderMenu.description += f"\n\nShowing {totalOrdersToDisplay} items out of {len(orders)}."
-    orderMenu.description += f"\nPage {page + 1} / {maxPages}"
-
-    orderMenu.add_option("View Order", lambda: view_order(orders))
-    orderMenu.add_option("Cancel Order", lambda: cancel_order(orderManager, orders))
-
-    if page > 0:
-        orderMenu.add_option("Previous Page", lambda: display_orders(orderManager, orders, page - 1))
-
-    if page < maxPages - 1:
-        orderMenu.add_option("Next Page", lambda: display_orders(orderManager, orders, page + 1))
-
-    orderMenu.process()
-
 def view_order(orders: list[Order]):
+    dishManager = DishManager()
     orderId = int(input("Insert the order ID that you want to view: "))
     currentOrder: Order | None = None
 
@@ -68,8 +33,8 @@ def view_order(orders: list[Order]):
 
     for item in countedItems.keys():
         total = countedItems[item]
-        # TODO: Use the actual dish name.
-        print(f" - ({total}x) {item}")
+        dish = dishManager.get_dish_lenient(item)
+        print(f" - ({total}x) {dish.dishName} (${dish.price * total})")
 
 def cancel_order(orderManager: OrderManager, orders: list[Order]):
     orderId = int(input("Insert the order ID that you want to cancel: "))
@@ -92,10 +57,17 @@ def cancel_order(orderManager: OrderManager, orders: list[Order]):
     currentOrder.status = "cancelled"
     orderManager.save()
 
+def add_additional_options(menu: OptionMenu, orderManager: OrderManager, orders: list[Order]):
+    menu.description = "In this menu, you can track the status of all of your orders, and cancel any unfulfilled orders."
+    menu.description += "\n\nOrders:"
+
+    menu.add_option("View Order", lambda: view_order(orders))
+    menu.add_option("Cancel Order", lambda: cancel_order(orderManager, orders))
+
 def init(account: Account):
     orderManager = OrderManager()
     # Get all orders for the account, sorted by the most recent orders.
     currentOrders = orderManager.get_all_orders(account)
     currentOrders.sort(key = lambda x: x.orderTime, reverse = True)
 
-    display_orders(orderManager, currentOrders, 0)
+    create_pagination(orderManager, "Order Tracking", currentOrders, (lambda order: f"Order #{order.orderId} - {proper_case(order.status)}"), (lambda menu: add_additional_options(menu, orderManager, currentOrders)), 0)

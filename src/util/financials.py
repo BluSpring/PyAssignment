@@ -1,6 +1,9 @@
 import json
 from datetime import datetime
 
+from util.pagination import Manager
+
+
 def get_month() -> int:
     return datetime.now().month
 
@@ -39,7 +42,7 @@ def decode_finances(obj: dict) -> Finances:
     return Finances(obj["revenue"], obj["expenses"])
 
 # Financial Management - Manager
-class FinancialManager:
+class FinancialManager(Manager[Finances]):
     finances: dict[str, Finances]
 
     def _init_(self):

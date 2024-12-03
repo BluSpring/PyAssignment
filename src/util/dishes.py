@@ -1,6 +1,7 @@
 import json
 
 from util.inventory import InventoryManager
+from util.pagination import Manager
 
 
 class Dish:
@@ -29,7 +30,7 @@ def decode_dish(obj: dict) -> Dish:
     dish.currentDiscount = obj["currentDiscount"]
     return dish
 
-class DishManager:
+class DishManager(Manager[Dish]):
     dishes: list[Dish]
 
     def __init__(self):

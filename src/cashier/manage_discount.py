@@ -1,6 +1,7 @@
 from util.accounts import Account
 from util.dishes import DishManager
 from util.menu import OptionMenu
+from util.pagination import create_pagination
 
 
 def init(account: Account):
@@ -16,7 +17,7 @@ def init(account: Account):
 
     menu.add_option("Add Discount", lambda: handle_add_discount(dishManager, discounts, cachedDiscounts))
     menu.add_option("Remove Discount", lambda: handle_remove_discount(dishManager, discounts, cachedDiscounts))
-    menu.add_option("View Discounts", lambda: view_discounts(discounts))
+    menu.add_option("View Discounts", lambda: view_discounts(dishManager, discounts))
 
     menu.process()
 
@@ -77,7 +78,7 @@ def remove_discount(discounts, itemName):
     else:
         print("Discount not found.")
 
-def view_discounts(discounts):
+def view_discounts(dishManager, discounts):
     print("\n--- Current Discounts ---")
-    for item, discount in discounts.items():
-        print(f"{item}: {discount}%")
+
+    create_pagination(dishManager, "Current Discounts", discounts.keys(), (lambda name: f"{name}: {discounts[name]}%"), None, 0)

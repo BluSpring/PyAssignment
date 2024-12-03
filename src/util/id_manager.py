@@ -1,6 +1,9 @@
 import json
 
-class IdManager:
+from util.pagination import Manager
+
+
+class IdManager(Manager):
     ids: dict[str, int]
 
     def save(self):

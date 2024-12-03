@@ -2,6 +2,8 @@ import getpass
 import hashlib
 import json
 
+from util.pagination import Manager
+
 
 class Account:
     accountType: str
@@ -46,7 +48,7 @@ def validate_password(password: str):
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
-class AccountManager:
+class AccountManager(Manager[Account]):
     accounts: list[Account]
 
     def __init__(self):
