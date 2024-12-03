@@ -17,7 +17,11 @@ def init(account: Account):
     products = []
 
     for dish in dishManager.dishes:
-        products.append(f"{dish.dishName} - ${dish.price}")
+        text = f"{dish.dishName} - ${dish.price}"
+        if not dishManager.is_dish_available(dish):
+            text = f"(unavailable) {text}"
+
+        products.append(text)
 
     productBrowser = ProductBrowser(products)
     productBrowser.browse_products()
