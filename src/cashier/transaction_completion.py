@@ -8,9 +8,9 @@ from util.orders import OrderManager
 def complete_transaction(order: Order):
     dishManager = DishManager()
     accountManager = AccountManager()
-    account = accountManager.get_account("customer", order.customer_name)
+    account = accountManager.get_account("customer", order.username)
 
-    print(f"Receipt for Order #{order.order_id}")
+    print(f"Receipt for Order #{order.orderId}")
     print(f"  Customer Name: {account.name}")
 
     for item in order.items:
