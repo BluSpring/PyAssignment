@@ -1,38 +1,44 @@
 from util.accounts import Account
+from util.menu import OptionMenu
+from util.orders import OrderManager, Order
+from util.pagination import create_pagination
+from util.utils import millis_to_formatted_date_time, proper_case
 
 
 def init(account: Account):
-    pass
+    orderManager = OrderManager()
+    menu = OptionMenu("Order Management")
 
-class Order:
-    def __init__(self, order_id, customer_name, items, total_price, status="Pending"):
-        self.order_id = order_id
-        self.customer_name = customer_name
-        self.items = items
-        self.total_price = total_price
-        self.status = status
+    menu.add_option("View Orders", lambda: display_orders(orderManager))
+    menu.add_option("Update Order Status", lambda: handle_status_update(orderManager))
 
-    def update_status(self, new_status):
-        self.status = new_status
+    menu.process()
 
+def handle_status_update(orderManager: OrderManager):
+    orderId = int(input("Insert an order ID: "))
+    order = orderManager.get_order(orderId)
 
-        return f"Order ID: {self.order_id}, Customer: {self.customer_name}, Status: {self.status}, Total: ${self.total_price}"
+    if order is None:
+        raise Exception("Order not found!")
 
-orders = []
+    statusMenu = OptionMenu("Select Status")
+    statusMenu.automaticallyExit = True
+    statusMenu.description = f"Order #{order.orderId}"
+    statusMenu.description = f"\nPlaced at {millis_to_formatted_date_time(order.orderTime)}"
+    statusMenu.description += f"\nStatus: {order.status}"
 
-def create_order(order_id, customer_name, items):
-    total_price = sum([q * p for _, q, p in items])
-    new_order = Order(order_id, customer_name, items, total_price)
+    for status in ["pending", "preparing", "delivering", "cancelled", "completed"]:
+        statusMenu.add_option(proper_case(status), lambda: update_order_status(orderManager, order, status))
 
+    statusMenu.process()
 
-def update_order_status(order_id, new_status):
-    for order in orders:
-        if order.order_id == order_id:
-            order.update_status(new_status)
+def update_order_status(orderManager: OrderManager, order: Order, status: str):
+    order.status = status
+    orderManager.save()
+    print(f"Successfully set order status to {proper_case(status)}.")
 
-    print("Order not found.")
+def display_orders(orderManager: OrderManager):
+    orders: list[Order] = list(orderManager.orders)
+    orders.sort(key = lambda x: x.orderTime, reverse = True)
 
-def display_orders():
-
-    for order in orders:
-        print(order)
+    create_pagination(orderManager, "All Orders", orders, (lambda order: f"Order #{order.orderId} ({millis_to_formatted_date_time(order.orderTime)}) - {proper_case(order.status)}"), None, 0)
