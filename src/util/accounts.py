@@ -11,6 +11,7 @@ class Account:
     passwordHash: str
     name: str
     address: str
+    cart: list[str]
 
     def __init__(self, accountType: str, username: str, passwordHash: str):
         self.accountType = accountType
@@ -18,6 +19,7 @@ class Account:
         self.passwordHash = passwordHash
         self.name = ""
         self.address = ""
+        self.cart = []
 
 # Run serialization of the Account class
 class AccountEncoder(json.JSONEncoder):
@@ -28,6 +30,9 @@ def decode_account(obj: dict) -> Account:
     account = Account(obj["accountType"], obj["username"], obj["passwordHash"])
     account.name = obj["name"]
     account.address = obj["address"]
+
+    if "cart" in obj:
+        account.cart = obj["cart"]
 
     return account
 
