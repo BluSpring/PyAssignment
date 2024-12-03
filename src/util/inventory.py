@@ -46,3 +46,11 @@ class InventoryManager(Manager[InventoryItem]):
                 return item
 
         return None
+
+    # Similar to get_item, except is case-insensitive.
+    def get_item_lenient(self, name: str) -> InventoryItem | None:
+        for item in self.items:
+            if item.itemName.lower().strip() == name.lower().strip():
+                return item
+
+        return None
