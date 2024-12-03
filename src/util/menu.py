@@ -1,5 +1,6 @@
-from typing import Self, Callable
 import os
+from typing import Self, Callable
+
 
 def _clear_screen():
     if os.name == "nt": # Windows uses "cls" to clear the console.
@@ -8,15 +9,18 @@ def _clear_screen():
         os.system("clear")
 
 class OptionMenu:
-    name: str = ""
-    description: str = ""
-    _options: list[tuple[str, Callable]] = []
-    automaticallyExit: bool = False
+    name: str
+    description: str
+    _options: list[tuple[str, Callable]]
+    automaticallyExit: bool
+    exiting: bool
 
     def __init__(self: Self, name: str):
         self.name = name
         self.description = ""
         self._options = []
+        self.automaticallyExit = False
+        self.exiting = False
 
     # Allows us to easily add new options to the menu.
     def add_option(self: Self, name: str, option: Callable) -> Self:
@@ -47,6 +51,7 @@ class OptionMenu:
 
             if value == 0: # Exit if the value is 0.
                 print("Exiting...")
+                self.exiting = True
                 return
             elif value < 0 or value > len(self._options): # Check if the inserted value is within the bounds.
                 print(f"Number is out of bounds! Number must be between 0 and {len(self._options)}!")

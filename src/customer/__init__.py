@@ -33,11 +33,17 @@ Please log into your account, or create a new account, to be able to use our ser
             menu.add_option("Create new account", lambda: create_register(accounts, accountWorkaround))
 
             menu.process()
+
+            if menu.exiting:
+                break
         except Exception as e:
             print(f"An error occurred: {e}")
             print()
 
     account: Account = accountWorkaround["account"]
+
+    if account is None:
+        return
 
     menu = OptionMenu("Customer System")
     menu.description = """
