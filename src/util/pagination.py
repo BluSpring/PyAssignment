@@ -1,12 +1,12 @@
 import math
-from typing import Callable, TypeVar
+from typing import Callable, TypeVar, Generic
 
 from util.menu import OptionMenu
 
 # Define generic typing
 T = TypeVar("T")
 
-class Manager(T):
+class Manager(Generic[T]):
     def load(self):
         pass
 
