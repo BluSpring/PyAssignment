@@ -15,6 +15,10 @@ def proper_case(text: str) -> str:
     newText = ""
 
     for word in text.split(" "):
+        if len(word.strip()) <= 0:
+            newText += word
+            continue
+
         newWord = word[0].upper() + word[1:].lower()
         newText += newWord
 
