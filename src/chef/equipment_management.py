@@ -1,89 +1,125 @@
+import json
+
 from util.accounts import Account
+from util.id_manager import IdManager
 from util.menu import OptionMenu
+from util.pagination import Manager, create_pagination
+from util.utils import millis_to_formatted_date_time, get_current_time_millis, proper_case
+
 
 class Equipment:
-    def __init__(self, name, issue, report_date, status="Pending"):
+    name: str
+    issue: str
+    issueId: int
+    reportTimestamp: int
+    reporter: str
+    status: str
+
+    def __init__(self, name, issue, issueId, reportTimestamp, reporter, status = "Pending"):
         self.name = name
         self.issue = issue
-        self.report_date = report_date
+        self.issueId = issueId
+        self.reporter = reporter
+        self.reportTimestamp = reportTimestamp
         self.status = status
-        self.equipmentLog = []
 
-    def update_status(self, new_status):
-        self.status = new_status
+    def display_formatted(self):
+        print(f"Equipment Name: {self.name}")
+        print(f"Issue #{self.issueId}: {self.issue}")
+        print(f"Reported On: {millis_to_formatted_date_time(self.reportTimestamp)}")
+        print(f"Status: {self.status}")
 
-def display_equipment(equipment: Equipment):
-    print (f"Equipment Name: {equipment.name}")
-    print(f"Issue: {equipment.issue}")
-    print(f"Reported On: {equipment.report_date}")
-    print(f"Status: {equipment.status}")
-
-def report_equipment_issue(name, issue, report_date):
-   if not name or not issue or not report_date:
-       print("All fields are required to report an issue.")
-       return
-   equipment = Equipment(name, issue, report_date)
-   equipment.equipmentLog.append(equipment)
-   print("\nEquipment issue reported successfully!")
-   display_equipment(equipment)
-
-def update_equipment_status(name, new_status):
-    equipmentList: list[Equipment] = []
-    for equipment in equipmentList:
-        if equipment.name == name:
-            equipment.update_status(new_status)
-            print(f"\nThe status of '{name}' has been updated to '{new_status}'.")
-            display_equipment(equipment)
-            return
-        print(f"\nNo equipment found with the name '{name}'.")
-
-def view_equipment_logs(equipment: Equipment):
-    if not equipment:
-        print("\nNo equipment issues have been reported.")
-    else:
-        print("\n Equipment Logs")
-        for equipmentLog in equipment.equipmentLog:
-            display_equipment(equipment)
-
-def main():
-    while True:
-        print("\nEquipment Management Menu")
-        print("1. Report an Equipment Issue")
-        print("2. Update Equipment Status")
-        print("3. View Equipment Logs")
-        print("4. Exit")
-
-        choice = input("Enter your choice (1-4): ")
-
-        if choice == "1":
-            name = input("Enter the equipment name: ")
-            issue = input("Describe the issue: ")
-            report_date = input("Enter the report date (YYYY-MM-DD): ")
-            report_equipment_issue(name, issue, report_date)
-
-        elif choice == "2":
-            name = input("Enter the equipment name to update: ")
-            new_status = input("Enter the new status (e.g., Resolved, In Progress): ")
-            update_equipment_status(name, new_status)
-
-        elif choice == "3":
-            view_equipment_logs(None)
-
-        elif choice =="4":
-            print("\nExiting Equipment Management. Goodbye!")
-            break
-
-        else:
-            print("\nInvalid choice. Please enter a valid option.")
+def validate_status(status: str):
+    if status != "pending" and status != "identified" and status != "fixed" and status != "replaced" and status != "invalid":
+        raise Exception(f"Invalid status {status}!")
 
 
+class EquipmentEncoder(json.JSONEncoder):
+    def default(self, o: Equipment):
+        return o.__dict__
 
+def decode_equipment(obj: dict) -> Equipment:
+    return Equipment(obj["name"], obj["issue"], obj["reporter"], obj["reportTimestamp"], obj["status"])
 
+class EquipmentManager(Manager[Equipment]):
+    equipment: list[Equipment]
 
+    def __init__(self):
+        self.equipment = []
+
+    def save(self):
+        with open("equipment.json", "w") as file:
+            json.dump(self.equipment, file, indent = 4, cls = EquipmentEncoder)
+
+    def load(self):
+        try:
+            with open("equipment.json", "r") as file:
+                data = json.load(file, object_hook = decode_equipment)
+                self.equipment = data
+        except FileNotFoundError:
+            # Ignore non-existing files
+            pass
+
+    def get_equipment_lenient(self, name: str) -> list[Equipment]:
+        equipmentList: list[Equipment] = []
+
+        for equipment in self.equipment:
+            if equipment.name.lower().strip() == name.lower().strip():
+                equipmentList.append(equipment)
+
+        return equipmentList
+
+    def get_issue(self, id: int) -> Equipment | None:
+        for equipment in self.equipment:
+            if equipment.issueId == id:
+                return equipment
+
+        return None
+
+def update_equipment_status(equipmentManager: EquipmentManager, equipment: Equipment, newStatus: str):
+    equipment.status = newStatus
+    equipmentManager.save()
+
+def handle_report_issue(equipmentManager: EquipmentManager, account: Account):
+    name = input("Insert the equipment name: ")
+    issue = input("Insert the issue: ")
+
+    idManager = IdManager()
+    id = idManager.get_and_increment_id("issue")
+
+    equipment = Equipment(name, issue, id, get_current_time_millis(), account.username)
+    equipmentManager.equipment.append(equipment)
+    equipmentManager.save()
+
+    print(f"Equipment issue #{id} reported successfully!")
+
+def handle_update_status(equipmentManager: EquipmentManager):
+    id = int(input("Insert the equipment issue ID: "))
+    equipment = equipmentManager.get_issue(id)
+
+    statusMenu = OptionMenu("Select Issue Status")
+    statusMenu.automaticallyExit = True
+
+    for status in ["pending", "identified", "fixed", "replaced", "invalid"]:
+        statusMenu.add_option(proper_case(status), lambda: update_equipment_status(equipmentManager, equipment, status))
+
+    statusMenu.process()
+
+def handle_view_logs(equipmentManager: EquipmentManager):
+    name = input("Insert the equipment name: ")
+    equipmentList = equipmentManager.get_equipment_lenient(name)
+
+    if len(equipmentList) <= 0:
+        raise Exception("No equipment by that name had any issues reported!")
+
+    create_pagination(equipmentManager, f"Equipment Issue Logs for {name}", equipmentList, (lambda equipment: f"Issue #{equipment.issueId} (reported by {equipment.reporter}) - {proper_case(equipment.status)}"), None, 0)
 
 def init(account: Account):
-    equipment = Equipment("Name", None, "22-04-2023")
-    equipment.equipmentLog.append("Issue here")
+    equipmentManager = EquipmentManager()
+    menu = OptionMenu("Equipment Management Menu")
 
+    menu.add_option("Report an Equipment Issue", lambda: handle_report_issue(equipmentManager, account))
+    menu.add_option("Update Equipment Status", lambda: handle_update_status(equipmentManager))
+    menu.add_option("View Equipment Logs", lambda: handle_view_logs(equipmentManager))
 
-    pass
+    menu.process()
