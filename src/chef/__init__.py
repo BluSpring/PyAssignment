@@ -1,15 +1,18 @@
-import chef.inventory_check
-import chef.recipe_management
-import chef.production_record_keeping
 import chef.equipment_management
-
+import chef.inventory_check
+import chef.production_record_keeping
+import chef.recipe_management
 from util.accounts import AccountManager
 from util.menu import OptionMenu
 
+
 def init():
+    # Create a login menu for the chefs to log into
     accounts = AccountManager()
     account = accounts.create_login_menu("chef")
 
+    # Create a menu for the chefs to interact with, each pointing to different
+    # tasks they can do.
     menu = OptionMenu("Chef System")
     menu.add_option("Recipe Management", lambda: recipe_management.init(account))
     menu.add_option("Inventory Check", lambda: inventory_check.init(account))

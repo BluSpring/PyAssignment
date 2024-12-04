@@ -35,10 +35,12 @@ class OrderEncoder(json.JSONEncoder):
     def default(self, o: Order):
         return o.__dict__
 
+# Correctly decodes the Order class from JSON.
 def decode_order(obj: dict) -> Order:
     order = Order(obj["username"], obj["orderId"], obj["orderTime"])
     order.status = obj["status"]
 
+    # Validate the order status, make sure it wasn't tampered with.
     if not validate_order_status(order.status):
         raise RuntimeError(f"Order ID {order.orderId} has an invalid status: {order.status}")
 
@@ -68,6 +70,7 @@ class OrderManager(Manager[Order]):
             # Ignore non-existing files
             pass
 
+    # Get an order by its ID.
     def get_order(self, orderId: int) -> Order | None:
         for order in self.orders:
             if order.orderId == orderId:
@@ -75,6 +78,7 @@ class OrderManager(Manager[Order]):
 
         return None
 
+    # Gets all orders that were created by a specific account.
     def get_all_orders(self, account: Account) -> list[Order]:
         orders = []
 

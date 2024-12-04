@@ -26,6 +26,7 @@ def create_pagination(manager: Manager[T], name: str, items: list[T], lineDispla
     menu.automaticallyClearScreen = False
     menu.description = ""
 
+    # List all the items that are in the page.
     for i in range(itemsStart, itemsStart + totalToDisplay):
         item = items[i]
         menu.description += f"\n  {i + 1}. {lineDisplay(item)}"
@@ -33,12 +34,15 @@ def create_pagination(manager: Manager[T], name: str, items: list[T], lineDispla
     menu.description += f"\n\nShowing {totalToDisplay} items out of {len(items)}."
     menu.description += f"\nPage {page + 1} / {maxPages}"
 
+    # If we have requested for more options to be added, we should call our function that adds more options.
     if additionalOptions is not None:
         additionalOptions(menu)
 
+    # Add an option to navigate to the previous page if the current page is not the first page.
     if page > 0:
         menu.add_option("Previous Page", lambda: create_pagination(manager, name, items, lineDisplay, additionalOptions, page - 1))
 
+    # Add an option to navigate to the next page if the current page is not the last page.
     if page < maxPages - 1:
         menu.add_option("Next Page", lambda: create_pagination(manager, name, items, lineDisplay, additionalOptions, page + 1))
 

@@ -17,9 +17,12 @@ def create_register(accounts: AccountManager, accountWorkaround: dict):
 def init():
     accounts = AccountManager()
 
-    # Python does not allow setting variables inside lambdas, so we have to work around it with this.
+    # Python does not allow setting variables inside lambdas, and we aren't allowed to use global variables,
+    # so we have to work around it with this.
     accountWorkaround: dict = {"account": None}
 
+    # Request the customer to either create a new account or log into an existing account.
+    # Repeat until the customer either logs in or exits the menu.
     while accountWorkaround["account"] is None:
         try:
             menu = OptionMenu("Customer System")
@@ -32,6 +35,7 @@ def init():
 
             menu.process()
 
+            # Sentinel value to properly break out of this loop on exit.
             if menu.exiting:
                 break
         except Exception as e:
@@ -40,9 +44,11 @@ def init():
 
     account: Account = accountWorkaround["account"]
 
+    # If the user simply exited the menu, don't continue.
     if account is None:
         return
 
+    # Display a menu for customers to select what they want to do.
     menu = OptionMenu("Customer System")
     menu.description = "Welcome, customer, to Amar's Restaurant!"
     menu.description += "\nHere, you can manage your account, go through our products, track your orders, and submit reviews about our dishes!"

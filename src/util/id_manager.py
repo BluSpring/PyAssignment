@@ -3,6 +3,7 @@ import json
 from util.pagination import Manager
 
 
+# Automatically handles creating ever-incrementing IDs for managers.
 class IdManager(Manager):
     ids: dict[str, int]
 
@@ -19,12 +20,14 @@ class IdManager(Manager):
             # Ignore non-existing files
             pass
 
+    # Get the currently available ID.
     def get_id(self, name: str) -> int:
         if self.ids[name] is None:
             self.ids[name] = 0
 
         return self.ids[name]
 
+    # Get the currently available ID, and increment to a new one.
     def get_and_increment_id(self, name: str) -> int:
         currentId = self.get_id(name)
         self.ids[name] = currentId + 1

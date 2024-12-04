@@ -4,15 +4,18 @@ from datetime import datetime
 from util.pagination import Manager
 
 
+# Gets the current month.
 def get_month() -> int:
     return datetime.now().month
 
+# Gets the name of the current month.
 def get_formatted_month(month: int) -> str:
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
               "November", "December"]
 
     return months[month - 1]
 
+# Gets the current month number from the name.
 def get_month_from_formatted(monthName: str) -> int:
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
               "November", "December"]
@@ -23,11 +26,13 @@ def get_month_from_formatted(monthName: str) -> int:
 
     raise Exception(f"Invalid month name {monthName}!")
 
+# Gets the current year.
 def get_year() -> int:
     return datetime.now().year
 
+# Formats the month and year into MM-YYYY.
 def get_formatted_key(month: int, year: int) -> str:
-    return f"{month}-{year}"
+    return f"{month:02d}-{year}"
 
 class Finances:
     def __init__(self, revenue: float, expenses: float):
@@ -62,6 +67,7 @@ class FinancialManager(Manager[Finances]):
             # Ignore non-existing files
             pass
 
+    # Gets the financial records for a specific month and year.
     def get_finances(self, month: int, year: int) -> Finances:
         key = get_formatted_key(month, year)
 
@@ -70,6 +76,7 @@ class FinancialManager(Manager[Finances]):
 
         return self.finances[key]
 
+    # Gets the financial information for the current month.
     def get_current_finances(self) -> Finances:
         key = get_formatted_key(get_month(), get_year())
 
@@ -78,16 +85,21 @@ class FinancialManager(Manager[Finances]):
 
         return self.finances[key]
 
+    # Adds revenue to the current month.
     def add_revenue(self, amount):
         finances = self.get_current_finances()
         finances.revenue += amount
+        self.save()
         print(f"Added revenue: ${amount}. Total revenue: ${finances.revenue}")
 
+    # Adds expenses to the current month.
     def add_expense(self, amount):
         finances = self.get_current_finances()
         finances.expenses += amount
+        self.save()
         print(f"Added expense: ${amount}. Total expenses: ${finances.expenses}")
 
+    # Generates a report for a specific month and year.
     def generate_report(self, month: int, year: int):
         finances = self.finances[get_formatted_key(month, year)]
 

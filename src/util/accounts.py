@@ -41,6 +41,7 @@ def validate_account_type(accountType: str):
     if accountType != "manager" and accountType != "customer" and accountType != "chef" and accountType != "cashier":
         raise RuntimeError(f"Invalid account type {accountType}!")
 
+# Ensures the password is valid.
 def validate_password(password: str):
     password = password.strip()
 
@@ -50,6 +51,7 @@ def validate_password(password: str):
     if " " in password or "\n" in password:
         raise Exception("Invalid password! Password must not contain spaces or line breaks!")
 
+# Hash the password into a secure text, for us to store.
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -118,7 +120,9 @@ class AccountManager(Manager[Account]):
 
         return account
 
+    # Create a register menu for specific account types.
     def create_register_menu(self, accountType: str) -> Account:
+        # Ensure the account type is valid.
         validate_account_type(accountType)
 
         username = input("Insert a username: ")
@@ -133,7 +137,9 @@ class AccountManager(Manager[Account]):
         print(f"Successfully created account with username {username}!")
         return account
 
+    # Create a login menu for specific account types.
     def create_login_menu(self, accountType: str) -> Account:
+        # Ensure the account type is valid.
         validate_account_type(accountType)
 
         print(f"Logging in as {accountType}.")
@@ -145,6 +151,7 @@ class AccountManager(Manager[Account]):
 
         password = getpass.getpass("Password: ")
 
+        # Check if the password's hash matches the account password hash.
         if hash_password(password) != account.passwordHash:
             raise Exception("Invalid password!")
 
