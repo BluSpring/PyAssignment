@@ -20,6 +20,6 @@ def proper_case(text: str) -> str:
             continue
 
         newWord = word[0].upper() + word[1:].lower()
-        newText += newWord
+        newText += newWord + ' '
 
-    return newText
+    return newText.removesuffix(" ")
