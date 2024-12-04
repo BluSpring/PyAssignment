@@ -36,7 +36,7 @@ class OptionMenu:
         print(f"---[  {self.name}  ]---")
 
         if self.description != "":
-            print(self.description.strip()) # strip to ensure there is no extra erroneous whitespace.
+            print(self.description)
 
         print()
 
