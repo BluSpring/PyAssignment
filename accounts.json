@@ -4,20 +4,23 @@
         "username": "admin",
         "passwordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
         "name": "",
-        "address": ""
+        "address": "",
+        "cart": []
     },
     {
         "accountType": "customer",
         "username": "BluSpring",
-        "passwordHash": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
+        "passwordHash": "98c201c69e8ea6681b4dfe19b2ea793fe8c68766fb349655dffee483bb201f4c",
         "name": "Naz Ikhsan",
-        "address": ""
+        "address": "332, Jalan B7, Taman Melawati, 53100 Kuala Lumpur",
+        "cart": []
     },
     {
         "accountType": "customer",
         "username": "Test1",
         "passwordHash": "6559038a01c005df20cc8a896e00c8b8a035a824f3466f52c57b9f0e0a955fe6",
         "name": "Test Questionmark",
-        "address": ""
+        "address": "",
+        "cart": []
     }
 ]
