@@ -8,7 +8,7 @@ from util.menu import OptionMenu
 class CustomerFeedbackManager:
     feedbackList: list[str]
 
-    def _init_(self):
+    def __init__(self):
         self.feedbackList = []
         self.load()
 
