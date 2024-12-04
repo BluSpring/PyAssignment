@@ -66,6 +66,9 @@ def delete_account(accountManager: AccountManager, accounts: list[Account]):
     index = int(input("Insert the account ID you want to delete: ")) - 1
     account = accounts[index]
 
+    if account.username == "admin" and account.accountType == "manager":
+        raise Exception("You're not allowed to delete the admin account!")
+
     accountManager.accounts.remove(account)
     print(f"Deleted account with username {account.username}.")
 
