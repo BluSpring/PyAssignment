@@ -14,7 +14,7 @@ def add_additional_options(accountMenu: OptionMenu, accountManager: AccountManag
 def handle_type(accountManager: AccountManager, accountType: str):
     accounts = accountManager.get_accounts_of_type(accountType)
 
-    create_pagination(accountManager, f"Accounts ({proper_case(accountType)})", accounts, (lambda account: f"{account.username} - {proper_case(account.name) if len(account.name) > 0 else '(no name given)'}"), (lambda menu: add_additional_options(menu, accountManager, accounts)), 0)
+    create_pagination(accountManager, f"Accounts ({proper_case(accountType)})", accounts, (lambda account: f"{account.username} - {proper_case(account.name) if len(account.name) > 0 else '(no name provided)'}"), (lambda menu: add_additional_options(menu, accountManager, accounts)), 0)
 
 def view_account(accounts: list[Account]):
     index = int(input("Insert the account ID you want to view: ")) - 1
