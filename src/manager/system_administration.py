@@ -6,15 +6,31 @@ from util.pagination import create_pagination
 from util.utils import proper_case
 
 
-def add_additional_options(accountMenu: OptionMenu, accountManager: AccountManager, accounts: list[Account]):
+def add_additional_options(accountMenu: OptionMenu, accountManager: AccountManager, accountType: str, accounts: list[Account]):
     accountMenu.add_option("View Account Information", lambda: view_account(accounts))
     accountMenu.add_option("Change Password", lambda: change_account_password(accountManager, accounts))
+    accountMenu.add_option("Create New Account", lambda: create_account(accountManager))
     accountMenu.add_option("Delete Account", lambda: delete_account(accountManager, accounts))
+
+def create_account(accountManager: AccountManager, accountType: str):
+    username = input("Insert a username: ")
+    password = getpass.getpass("Insert a new password: ")
+    validate_password(password)
+
+    verify_password = getpass.getpass("Confirm new password: ")
+
+    if verify_password != password:
+        raise Exception("Password and confirm password fields did not match!")
+
+    account = accountManager.create_account(accountType, username, password)
+    accountManager.save()
+
+    print(f"Created new {accountType} account with username {account.username}.")
 
 def handle_type(accountManager: AccountManager, accountType: str):
     accounts = accountManager.get_accounts_of_type(accountType)
 
-    create_pagination(accountManager, f"Accounts ({proper_case(accountType)})", accounts, (lambda account: f"{account.username} - {proper_case(account.name) if len(account.name) > 0 else '(no name provided)'}"), (lambda menu: add_additional_options(menu, accountManager, accounts)), 0)
+    create_pagination(accountManager, f"Accounts ({proper_case(accountType)})", accounts, (lambda account: f"{account.username} - {proper_case(account.name) if len(account.name) > 0 else '(no name provided)'}"), (lambda menu: add_additional_options(menu, accountManager, accountType, accounts)), 0)
 
 def view_account(accounts: list[Account]):
     index = int(input("Insert the account ID you want to view: ")) - 1
