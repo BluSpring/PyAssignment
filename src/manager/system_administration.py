@@ -76,9 +76,7 @@ def init(account: Account):
     accountManager = AccountManager()
 
     selectTypeMenu = OptionMenu("Select Account Type")
-    selectTypeMenu.description = """
-    To proceed with managing accounts, please select an account type you want to manage.
-    """
+    selectTypeMenu.description = "To proceed with managing accounts, please select an account type you want to manage."
 
     selectTypeMenu.add_option("Cashier", lambda: handle_type(accountManager, "cashier"))
     selectTypeMenu.add_option("Chef", lambda: handle_type(accountManager, "chef"))
