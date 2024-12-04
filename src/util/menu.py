@@ -13,6 +13,7 @@ class OptionMenu:
     description: str
     _options: list[tuple[str, Callable]]
     automaticallyExit: bool
+    automaticallyClearScreen: bool
     exiting: bool
 
     def __init__(self: Self, name: str):
@@ -20,6 +21,7 @@ class OptionMenu:
         self.description = ""
         self._options = []
         self.automaticallyExit = False
+        self.automaticallyClearScreen = True
         self.exiting = False
 
     # Allows us to easily add new options to the menu.
@@ -62,10 +64,12 @@ class OptionMenu:
 
             if not self.automaticallyExit:
                 input("Press enter to continue...")
-                _clear_screen()  # Clear the terminal window.
+                if self.automaticallyClearScreen:
+                    _clear_screen()  # Clear the terminal window.
                 self.process() # After the option completes, re-run this function until the user exits.
             else:
-                _clear_screen()
+                if self.automaticallyClearScreen:
+                    _clear_screen()
         except ValueError: # If the user inputs an invalid number, just process it again.
             print("Invalid number!")
             self.process()

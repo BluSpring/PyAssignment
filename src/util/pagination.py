@@ -23,6 +23,7 @@ def create_pagination(manager: Manager[T], name: str, items: list[T], lineDispla
 
     menu = OptionMenu(name)
     menu.automaticallyExit = True
+    menu.automaticallyClearScreen = False
     menu.description = ""
 
     for i in range(itemsStart, itemsStart + totalToDisplay):
