@@ -45,7 +45,7 @@ def decode_finances(obj: dict) -> Finances:
 class FinancialManager(Manager[Finances]):
     finances: dict[str, Finances]
 
-    def _init_(self):
+    def __init__(self):
         self.finances = {}
         self.load()
 

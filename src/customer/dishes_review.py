@@ -9,7 +9,7 @@ from util.menu import OptionMenu
 class DishReview:
     reviews: dict[str, list[str]] # Dish Name - List of Reviews
 
-    def _init_(self):
+    def __init__(self):
         self.reviews = {}
         self.load()
 
