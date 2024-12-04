@@ -9,7 +9,7 @@ from util.utils import proper_case
 def add_additional_options(accountMenu: OptionMenu, accountManager: AccountManager, accountType: str, accounts: list[Account]):
     accountMenu.add_option("View Account Information", lambda: view_account(accounts))
     accountMenu.add_option("Change Password", lambda: change_account_password(accountManager, accounts))
-    accountMenu.add_option("Create New Account", lambda: create_account(accountManager))
+    accountMenu.add_option("Create New Account", lambda: create_account(accountManager, accountType))
     accountMenu.add_option("Delete Account", lambda: delete_account(accountManager, accounts))
 
 def create_account(accountManager: AccountManager, accountType: str):
