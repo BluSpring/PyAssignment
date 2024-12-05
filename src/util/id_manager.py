@@ -22,7 +22,7 @@ class IdManager(Manager):
 
     # Get the currently available ID.
     def get_id(self, name: str) -> int:
-        if self.ids[name] is None:
+        if name not in self.ids:
             self.ids[name] = 0
 
         return self.ids[name]

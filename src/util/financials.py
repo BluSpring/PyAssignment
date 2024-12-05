@@ -46,7 +46,7 @@ class FinancialManager(Manager[Finances]):
     def get_current_finances(self) -> Finances:
         key = get_formatted_key(get_month(), get_year())
 
-        if not key in self.finances:
+        if key not in self.finances:
             self.finances[key] = Finances(0, 0)
 
         return self.finances[key]

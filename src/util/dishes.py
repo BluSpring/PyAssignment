@@ -72,7 +72,7 @@ class DishManager(Manager[Dish]):
         # so count them and assign them to a dict with the item name as the key,
         # and the amount as the value.
         for itemName in dish.items:
-            if items[itemName] is not None:
+            if itemName in items:
                 items[itemName] = items[itemName] + 1
             else:
                 items[itemName] = 1
