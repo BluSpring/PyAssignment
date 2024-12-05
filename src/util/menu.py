@@ -1,9 +1,10 @@
 import os
+import sys
 from typing import Self, Callable
 
 
 def _clear_screen():
-    if os.name == "nt": # Windows uses "cls" to clear the console.
+    if sys.platform == "win32": # Windows uses "cls" to clear the console.
         os.system("cls")
     else: # Most other operating systems use "clear".
         os.system("clear")
