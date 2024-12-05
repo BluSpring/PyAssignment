@@ -92,7 +92,7 @@ def handle_log_record(recordManager: ProductionRecordManager):
 
 
 def view_production_records(recordManager: ProductionRecordManager):
-    # Create a list of records, sorted from last produced to first produced.
+    # Create a copy of the list of records, sorted from last produced to first produced.
     records = list(recordManager.records)
     records.sort(key = operator.attrgetter("productionTimestamp"), reverse = True)
 

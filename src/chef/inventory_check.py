@@ -30,6 +30,7 @@ def update_inventory(inventoryManager: InventoryManager, itemName, quantity):
     item = inventoryManager.get_item_lenient(itemName)
 
     if item is not None:
+        # Ensure the quantity never goes below the item's actual quantity.
         if (item.amount + quantity) < 0:
             raise Exception(f"Quantity must not reduce below the item's quantity!")
 

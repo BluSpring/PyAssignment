@@ -1,4 +1,5 @@
 import json
+import operator
 
 from util.accounts import Account
 from util.id_manager import IdManager
@@ -8,12 +9,12 @@ from util.utils import millis_to_formatted_date_time, get_current_time_millis, p
 
 
 class Equipment:
-    name: str
-    issue: str
-    issueId: int
-    reportTimestamp: int
-    reporter: str
-    status: str
+    name: str # Equipment name
+    issue: str # The equipment issue
+    issueId: int # The issue ID
+    reportTimestamp: int # The timestamp of the issue being reported, in milliseconds.
+    reporter: str # The username of the account reporting the issue.
+    status: str # The current status. Valid values: "pending", "identified", "fixed", "replaced", "invalid".
 
     def __init__(self, name, issue, issueId, reportTimestamp, reporter, status = "Pending"):
         self.name = name
@@ -60,6 +61,7 @@ class EquipmentManager(Manager[Equipment]):
             # Ignore non-existing files
             pass
 
+    # Gets the equipment name, without being case-sensitive or whitespace-sensitive.
     def get_equipment_lenient(self, name: str) -> list[Equipment]:
         equipmentList: list[Equipment] = []
 
@@ -69,6 +71,7 @@ class EquipmentManager(Manager[Equipment]):
 
         return equipmentList
 
+    # Gets the issue by the issue ID.
     def get_issue(self, id: int) -> Equipment | None:
         for equipment in self.equipment:
             if equipment.issueId == id:
@@ -112,7 +115,10 @@ def handle_view_logs(equipmentManager: EquipmentManager):
     if len(equipmentList) <= 0:
         raise Exception("No equipment by that name had any issues reported!")
 
-    create_pagination(equipmentManager, f"Equipment Issue Logs for {name}", equipmentList, (lambda equipment: f"Issue #{equipment.issueId} (reported by {equipment.reporter}) - {proper_case(equipment.status)}"), None, 0)
+    # Sort by latest issue to earliest issue.
+    equipmentList.sort(key = operator.attrgetter("reportTimestamp"), reverse = True)
+
+    create_pagination(equipmentManager, f"Equipment Issue Logs for {name}", equipmentList, (lambda equipment: f"Issue #{equipment.issueId} (reported by {equipment.reporter} on {millis_to_formatted_date_time(equipment.reportTimestamp)}) - {proper_case(equipment.status)}"), None, 0)
 
 def init(account: Account):
     equipmentManager = EquipmentManager()
