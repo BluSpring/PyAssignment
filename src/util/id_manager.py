@@ -7,6 +7,9 @@ from util.pagination import Manager
 class IdManager(Manager):
     ids: dict[str, int]
 
+    def __init__(self):
+        self.load()
+
     def save(self):
         with open("ids.json", "w") as file:
             json.dump(self.ids, file, indent = 4)
