@@ -22,5 +22,21 @@
         "name": "Test Questionmark",
         "address": "",
         "cart": []
+    },
+    {
+        "accountType": "chef",
+        "username": "chefman47",
+        "passwordHash": "e641d252d50f40babedf969d05aec4b4cc646e13112edcb8a5a608511409fffd",
+        "name": "",
+        "address": "",
+        "cart": []
+    },
+    {
+        "accountType": "cashier",
+        "username": "greatcashier",
+        "passwordHash": "6cca263b3bfe98052e18df69735e0256fc93929142391732131ccde6241f0309",
+        "name": "",
+        "address": "",
+        "cart": []
     }
 ]
