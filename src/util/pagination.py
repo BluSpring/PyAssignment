@@ -15,7 +15,7 @@ class Manager(Generic[T]):
     def save(self):
         pass
 
-def create_pagination(manager: Manager[T], name: str, items: list[T], lineDisplay: Callable[[T], str], additionalOptions: Callable[[OptionMenu], None] | None, page: int):
+def create_pagination(manager: Manager[T] | None, name: str, items: list[T], lineDisplay: Callable[[T], str], additionalOptions: Callable[[OptionMenu], None] | None, page: int):
     maxPages = math.ceil(len(items) / 10)
     # The index to use for printing the items
     itemsStart = page * 10
