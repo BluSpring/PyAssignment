@@ -7,3 +7,4 @@ authors = [
     { name = "Sarvanavel Prakash" },
     { name = "Lim Jun Hong" }
 ]
+requires-python = ">= 3.12"
