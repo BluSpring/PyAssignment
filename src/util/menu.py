@@ -9,12 +9,12 @@ def _clear_screen():
         os.system("clear")
 
 class OptionMenu:
-    name: str
-    description: str
-    _options: list[tuple[str, Callable]]
-    automaticallyExit: bool
-    automaticallyClearScreen: bool
-    exiting: bool
+    name: str # Option menu name.
+    description: str # Description
+    _options: list[tuple[str, Callable]] # Internal value, used to map options to a function without being bound to a key/value pair.
+    automaticallyExit: bool # Should the menu automatically exit after being completed?
+    automaticallyClearScreen: bool # Should the menu automatically clear the screen?
+    exiting: bool # If the menu is currently being exited. May be used as a sentinel value in while loops.
 
     def __init__(self: Self, name: str):
         self.name = name

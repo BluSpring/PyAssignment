@@ -40,6 +40,7 @@ class InventoryManager(Manager[InventoryItem]):
             # Ignore non-existing files
             pass
 
+    # Get an item by its exact name.
     def get_item(self, name: str) -> InventoryItem | None:
         for item in self.items:
             if item.itemName == name:

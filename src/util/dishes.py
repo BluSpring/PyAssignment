@@ -5,11 +5,11 @@ from util.pagination import Manager
 
 
 class Dish:
-    dishName: str
+    dishName: str # the Dish name
     items: list[str] # List of InventoryItem names
-    price: float
-    recipe: list[str]
-    currentDiscount: float
+    price: float # The price, in $.
+    recipe: list[str] # The recipe instructions.
+    currentDiscount: float # The discount. Must be a value between 0 and 1.
 
     def __init__(self, dishName: str, items: list[str], price: float, recipe: list[str]):
         self.dishName = dishName
@@ -18,7 +18,8 @@ class Dish:
         self.recipe = recipe
         self.currentDiscount = 0
 
-    def get_price(self):
+    # Get the actual dish price with the discount applied.
+    def get_price(self) -> float:
         return self.price - (self.price * self.currentDiscount)
 
 class DishEncoder(json.JSONEncoder):

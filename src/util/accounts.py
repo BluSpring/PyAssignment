@@ -6,12 +6,12 @@ from util.pagination import Manager
 
 
 class Account:
-    accountType: str
-    username: str
-    passwordHash: str
-    name: str
-    address: str
-    cart: list[str]
+    accountType: str # The account type. Valid types: "manager", "customer", "chef", "cashier"
+    username: str # The account username. Case-sensitive.
+    passwordHash: str # The hashed version of the password.
+    name: str # The account user's full name.
+    address: str # The account user's address.
+    cart: list[str] # The account user's shopping cart. Only used by customers.
 
     def __init__(self, accountType: str, username: str, passwordHash: str):
         self.accountType = accountType
@@ -26,11 +26,15 @@ class AccountEncoder(json.JSONEncoder):
     def default(self, o: Account):
         return o.__dict__
 
+# Deserializes the Account class that was stored in the JSON.
 def decode_account(obj: dict) -> Account:
     account = Account(obj["accountType"], obj["username"], obj["passwordHash"])
     account.name = obj["name"]
     account.address = obj["address"]
 
+    # If the shopping cart exists in the data, load it in.
+    # In a prior iteration, the shopping cart didn't originally exist, but to not crash the program,
+    # this was added in.
     if "cart" in obj:
         account.cart = obj["cart"]
 
@@ -45,9 +49,11 @@ def validate_account_type(accountType: str):
 def validate_password(password: str):
     password = password.strip()
 
+    # Ensure password is above 8 characters.
     if len(password) < 8:
         raise Exception("Password must be longer than 8 characters!")
 
+    # If the password contains whitespace, do not allow it.
     if " " in password or "\n" in password:
         raise Exception("Invalid password! Password must not contain spaces or line breaks!")
 
