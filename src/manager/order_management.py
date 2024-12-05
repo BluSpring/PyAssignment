@@ -24,7 +24,7 @@ def handle_status_update(orderManager: OrderManager):
     statusMenu = OptionMenu("Select Status")
     statusMenu.automaticallyExit = True
     statusMenu.description = f"Order #{order.orderId}"
-    statusMenu.description = f"\nPlaced at {millis_to_formatted_date_time(order.orderTime)}"
+    statusMenu.description += f"\nPlaced at {millis_to_formatted_date_time(order.orderTime)}"
     statusMenu.description += f"\nStatus: {order.status}"
 
     for status in ["pending", "preparing", "delivering", "cancelled", "completed"]:
