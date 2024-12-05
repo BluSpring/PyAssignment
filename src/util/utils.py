@@ -30,3 +30,33 @@ def proper_case(text: str) -> str:
 
     # Remove trailing spaces from the text.
     return newText.removesuffix(" ")
+
+# Gets the current month.
+def get_month() -> int:
+    return datetime.now().month
+
+# Gets the name of the current month.
+def get_formatted_month(month: int) -> str:
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+              "November", "December"]
+
+    return months[month - 1]
+
+# Gets the current month number from the name.
+def get_month_from_formatted(monthName: str) -> int:
+    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+              "November", "December"]
+
+    for month in range(len(months)):
+        if monthName.lower().strip() == months[month].lower():
+            return month
+
+    raise Exception(f"Invalid month name {monthName}!")
+
+# Gets the current year.
+def get_year() -> int:
+    return datetime.now().year
+
+# Formats the month and year into MM-YYYY.
+def get_formatted_key(month: int, year: int) -> str:
+    return f"{month:02d}-{year}"

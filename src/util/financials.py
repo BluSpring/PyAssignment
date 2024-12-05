@@ -1,38 +1,8 @@
 import json
-from datetime import datetime
 
 from util.pagination import Manager, ManagerSerializer
+from util.utils import *
 
-
-# Gets the current month.
-def get_month() -> int:
-    return datetime.now().month
-
-# Gets the name of the current month.
-def get_formatted_month(month: int) -> str:
-    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-              "November", "December"]
-
-    return months[month - 1]
-
-# Gets the current month number from the name.
-def get_month_from_formatted(monthName: str) -> int:
-    months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
-              "November", "December"]
-
-    for month in range(len(months)):
-        if monthName.lower().strip() == months[month].lower():
-            return month
-
-    raise Exception(f"Invalid month name {monthName}!")
-
-# Gets the current year.
-def get_year() -> int:
-    return datetime.now().year
-
-# Formats the month and year into MM-YYYY.
-def get_formatted_key(month: int, year: int) -> str:
-    return f"{month:02d}-{year}"
 
 class Finances:
     def __init__(self, revenue: float, expenses: float):
@@ -67,7 +37,7 @@ class FinancialManager(Manager[Finances]):
     def get_finances(self, month: int, year: int) -> Finances:
         key = get_formatted_key(month, year)
 
-        if not key in self.finances:
+        if key not in self.finances:
             raise Exception(f"Financial records for {get_formatted_month(month)} {year} do not exist!")
 
         return self.finances[key]
@@ -97,7 +67,12 @@ class FinancialManager(Manager[Finances]):
 
     # Generates a report for a specific month and year.
     def generate_report(self, month: int, year: int):
-        finances = self.finances[get_formatted_key(month, year)]
+        key = get_formatted_key(month, year)
+
+        if key not in self.finances:
+            raise Exception(f"No financial information for {get_formatted_month(month)} {year}.")
+
+        finances = self.finances[key]
 
         if finances is None:
             raise Exception(f"No financial information for {get_formatted_month(month)} {year}.")
