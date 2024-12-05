@@ -3,6 +3,8 @@ from typing import Callable, TypeVar, Generic
 
 from util.menu import OptionMenu
 
+# 🐧
+
 # Define generic typing
 T = TypeVar("T")
 
