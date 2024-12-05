@@ -45,12 +45,10 @@ def decode_order(obj: dict) -> Order:
 class OrderManager(Manager[Order]):
     idManager: IdManager
     orders: list[Order]
-    currentId: int
 
     def __init__(self):
         self.idManager = IdManager()
         self.orders = []
-        self.currentId = 0
         self.load()
 
     def save(self):
