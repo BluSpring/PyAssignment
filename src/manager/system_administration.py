@@ -33,7 +33,7 @@ def handle_type(accountManager: AccountManager, accountType: str):
     create_pagination(accountManager, f"Accounts ({proper_case(accountType)})", accounts, (lambda account: f"{account.username} - {proper_case(account.name) if len(account.name) > 0 else '(no name provided)'}"), (lambda menu: add_additional_options(menu, accountManager, accountType, accounts)), 0)
 
 def view_account(accounts: list[Account]):
-    index = int(input("Insert the account ID you want to view: ")) - 1
+    index = int(input("Insert the account ID you want to view (e.g. 1, 43, 73): ")) - 1
     account = accounts[index]
 
     print(f"Username: {account.username}")
