@@ -1,4 +1,5 @@
 import json
+import operator
 
 from util.accounts import Account
 from util.dishes import DishManager
@@ -9,10 +10,10 @@ from util.utils import millis_to_formatted_date_time, get_current_time_millis
 
 
 class ProductionRecord:
-    dishName: str
-    quantity: int
-    batchNumber: int
-    productionTimestamp: int
+    dishName: str # The name of the produced dish
+    quantity: int # Total quantity of dishes produced in the batch
+    batchNumber: int # The batch number.
+    productionTimestamp: int # The timestamp, in milliseconds, of when the batch was produced
 
     def __init__(self, dishName, quantity, batchNumber, productionTimestamp):
         self.dishName = dishName
@@ -20,6 +21,7 @@ class ProductionRecord:
         self.batchNumber = batchNumber
         self.productionTimestamp = productionTimestamp
 
+    # Get the expiry date of the batch.
     def get_expiry_timestamp(self):
         return self.productionTimestamp + 2.592e+8 # 3 days
 
@@ -31,7 +33,7 @@ def decode_item(obj: dict) -> ProductionRecord:
     return ProductionRecord(obj["dishName"], obj["quantity"], obj["batchNumber"], obj["productionTimestamp"])
 
 class ProductionRecordManager(Manager[ProductionRecord]):
-    records: list[ProductionRecord]
+    records: list[ProductionRecord] # List of produced records
 
     def __init__(self):
         self.records = []
@@ -50,6 +52,7 @@ class ProductionRecordManager(Manager[ProductionRecord]):
             # Ignore non-existing files
             pass
 
+    # Gets the batch by the specific record ID.
     def get_batch_by_id(self, id: int) -> ProductionRecord | None:
         for record in self.records:
             if record.batchNumber == id:
@@ -89,4 +92,8 @@ def handle_log_record(recordManager: ProductionRecordManager):
 
 
 def view_production_records(recordManager: ProductionRecordManager):
-    create_pagination(recordManager, "Production Records", (lambda record: f"Batch #{record.batchNumber}, creating {record.quantity} x {record.dishName}, expiring on {millis_to_formatted_date_time(record.get_expiry_timestamp())}"), None, 0)
+    # Create a list of records, sorted from last produced to first produced.
+    records = list(recordManager.records)
+    records.sort(key = operator.attrgetter("productionTimestamp"), reverse = True)
+
+    create_pagination(recordManager, "Production Records", records, (lambda record: f"Batch #{record.batchNumber}, creating {record.quantity} x {record.dishName}, expiring on {millis_to_formatted_date_time(record.get_expiry_timestamp())}"), None, 0)
