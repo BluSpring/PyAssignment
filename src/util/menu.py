@@ -32,6 +32,8 @@ class OptionMenu:
 
     # Must be run after all options are added, to be able to display the menu to users.
     def process(self):
+        self.exiting = False
+
         print()
         print(f"---[  {self.name}  ]---")
 
