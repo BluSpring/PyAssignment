@@ -2,7 +2,7 @@ import json
 
 from util.accounts import Account
 from util.id_manager import IdManager
-from util.pagination import Manager
+from util.pagination import Manager, ManagerSerializer
 from util.utils import get_current_time_millis
 
 
@@ -31,10 +31,6 @@ def validate_order_status(status: str) -> bool:
     return (status == "pending" or status == "preparing" or status == "delivering"
             or status == "cancelled" or status == "completed")
 
-class OrderEncoder(json.JSONEncoder):
-    def default(self, o: Order):
-        return o.__dict__
-
 # Correctly decodes the Order class from JSON.
 def decode_order(obj: dict) -> Order:
     order = Order(obj["username"], obj["orderId"], obj["orderTime"])
@@ -59,7 +55,7 @@ class OrderManager(Manager[Order]):
 
     def save(self):
         with open("orders.json", "w") as file:
-            json.dump(self.orders, file, indent = 4, cls = OrderEncoder)
+            json.dump(self.orders, file, indent = 4, cls = ManagerSerializer)
 
     def load(self):
         try:

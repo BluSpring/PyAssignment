@@ -1,6 +1,6 @@
 import json
 
-from util.pagination import Manager
+from util.pagination import Manager, ManagerSerializer
 
 
 class InventoryItem:
@@ -12,10 +12,6 @@ class InventoryItem:
         self.itemName = itemName
         self.price = price
         self.amount = amount
-
-class ItemEncoder(json.JSONEncoder):
-    def default(self, o: InventoryItem):
-        return o.__dict__
 
 def decode_item(obj: dict) -> InventoryItem:
     return InventoryItem(obj["itemName"], obj["price"], obj["amount"])
@@ -29,7 +25,7 @@ class InventoryManager(Manager[InventoryItem]):
 
     def save(self):
         with open("inventory.json", "w") as file:
-            json.dump(self.items, file, indent = 4, cls = ItemEncoder)
+            json.dump(self.items, file, indent = 4, cls = ManagerSerializer)
 
     def load(self):
         try:

@@ -5,7 +5,7 @@ from util.accounts import Account
 from util.dishes import DishManager
 from util.id_manager import IdManager
 from util.menu import OptionMenu
-from util.pagination import Manager, create_pagination
+from util.pagination import Manager, create_pagination, ManagerSerializer
 from util.utils import millis_to_formatted_date_time, get_current_time_millis
 
 
@@ -25,10 +25,6 @@ class ProductionRecord:
     def get_expiry_timestamp(self):
         return self.productionTimestamp + 2.592e+8 # 3 days
 
-class ItemEncoder(json.JSONEncoder):
-    def default(self, o: ProductionRecord):
-        return o.__dict__
-
 def decode_item(obj: dict) -> ProductionRecord:
     return ProductionRecord(obj["dishName"], obj["quantity"], obj["batchNumber"], obj["productionTimestamp"])
 
@@ -41,7 +37,7 @@ class ProductionRecordManager(Manager[ProductionRecord]):
 
     def save(self):
         with open("production.json", "w") as file:
-            json.dump(self.records, file, indent = 4, cls = ItemEncoder)
+            json.dump(self.records, file, indent = 4, cls = ManagerSerializer)
 
     def load(self):
         try:

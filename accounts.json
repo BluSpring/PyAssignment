@@ -38,5 +38,13 @@
         "name": "",
         "address": "",
         "cart": []
+    },
+    {
+        "accountType": "chef",
+        "username": "chefman43",
+        "passwordHash": "91fe2bdd5a368acf66c92ff9b51f5f3a5d9fcc6336e6b0f55430e8a205320e4a",
+        "name": "",
+        "address": "",
+        "cart": []
     }
 ]

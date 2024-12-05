@@ -1,7 +1,7 @@
 import json
 
 from util.inventory import InventoryManager
-from util.pagination import Manager
+from util.pagination import Manager, ManagerSerializer
 
 
 class Dish:
@@ -22,10 +22,6 @@ class Dish:
     def get_price(self) -> float:
         return self.price - (self.price * self.currentDiscount)
 
-class DishEncoder(json.JSONEncoder):
-    def default(self, o: Dish):
-        return o.__dict__
-
 def decode_dish(obj: dict) -> Dish:
     dish = Dish(obj["dishName"], obj["items"], obj["price"], obj["recipe"])
     dish.currentDiscount = obj["currentDiscount"]
@@ -40,7 +36,7 @@ class DishManager(Manager[Dish]):
 
     def save(self):
         with open("dishes.json", "w") as file:
-            json.dump(self.dishes, file, indent = 4, cls = DishEncoder)
+            json.dump(self.dishes, file, indent = 4, cls = ManagerSerializer)
 
     def load(self):
         try:

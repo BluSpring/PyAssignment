@@ -4,7 +4,7 @@ import operator
 from util.accounts import Account
 from util.id_manager import IdManager
 from util.menu import OptionMenu
-from util.pagination import Manager, create_pagination
+from util.pagination import Manager, create_pagination, ManagerSerializer
 from util.utils import millis_to_formatted_date_time, get_current_time_millis, proper_case
 
 
@@ -34,11 +34,6 @@ def validate_status(status: str):
     if status != "pending" and status != "identified" and status != "fixed" and status != "replaced" and status != "invalid":
         raise Exception(f"Invalid status {status}!")
 
-
-class EquipmentEncoder(json.JSONEncoder):
-    def default(self, o: Equipment):
-        return o.__dict__
-
 def decode_equipment(obj: dict) -> Equipment:
     return Equipment(obj["name"], obj["issue"], obj["reporter"], obj["reportTimestamp"], obj["status"])
 
@@ -50,7 +45,7 @@ class EquipmentManager(Manager[Equipment]):
 
     def save(self):
         with open("equipment.json", "w") as file:
-            json.dump(self.equipment, file, indent = 4, cls = EquipmentEncoder)
+            json.dump(self.equipment, file, indent = 4, cls = ManagerSerializer)
 
     def load(self):
         try:

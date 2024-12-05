@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from util.pagination import Manager
+from util.pagination import Manager, ManagerSerializer
 
 
 # Gets the current month.
@@ -39,10 +39,6 @@ class Finances:
         self.revenue = revenue
         self.expenses = expenses
 
-class FinanceEncoder(json.JSONEncoder):
-    def default(self, o: Finances):
-        return o.__dict__
-
 def decode_finances(obj: dict) -> Finances:
     return Finances(obj["revenue"], obj["expenses"])
 
@@ -56,7 +52,7 @@ class FinancialManager(Manager[Finances]):
 
     def save(self):
         with open("finances.json", "w") as file:
-            json.dump(self.finances, file, indent = 4, cls = FinanceEncoder)
+            json.dump(self.finances, file, indent = 4, cls = ManagerSerializer)
 
     def load(self):
         try:

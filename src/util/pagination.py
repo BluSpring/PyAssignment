@@ -1,3 +1,4 @@
+import json
 import math
 from typing import Callable, TypeVar, Generic
 
@@ -7,6 +8,11 @@ from util.menu import OptionMenu
 
 # Define generic typing
 T = TypeVar("T")
+
+# Handles serializing classes into JSON objects.
+class ManagerSerializer(json.JSONEncoder):
+    def default(self, o: T):
+        return o.__dict__
 
 class Manager(Generic[T]):
     def load(self):

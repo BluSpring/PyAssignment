@@ -2,7 +2,7 @@ import getpass
 import hashlib
 import json
 
-from util.pagination import Manager
+from util.pagination import Manager, ManagerSerializer
 
 
 class Account:
@@ -20,11 +20,6 @@ class Account:
         self.name = ""
         self.address = ""
         self.cart = []
-
-# Run serialization of the Account class
-class AccountEncoder(json.JSONEncoder):
-    def default(self, o: Account):
-        return o.__dict__
 
 # Deserializes the Account class that was stored in the JSON.
 def decode_account(obj: dict) -> Account:
@@ -70,7 +65,7 @@ class AccountManager(Manager[Account]):
 
     def save(self):
         with open("accounts.json", "w") as file:
-            json.dump(self.accounts, file, indent = 4, cls = AccountEncoder)
+            json.dump(self.accounts, file, indent = 4, cls = ManagerSerializer)
 
     def load(self):
         try:

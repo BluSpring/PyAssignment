@@ -9,7 +9,7 @@ class IdManager(Manager):
 
     def save(self):
         with open("ids.json", "w") as file:
-            json.dump(self.ids, file, indent=4)
+            json.dump(self.ids, file, indent = 4)
 
     def load(self):
         try:
