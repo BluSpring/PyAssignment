@@ -10,7 +10,7 @@ class Order:
     username: str # Username of the account that placed the order
     orderId: int # Order ID, used internally.
     orderTime: int # Time the order was placed, in milliseconds
-    items: list[str] # Stores a list of dish IDs
+    items: list[str] # Stores a list of dish names
     status: str # The current order status.
 
     def __init__(self, username: str, orderId: int, orderTime: int):
