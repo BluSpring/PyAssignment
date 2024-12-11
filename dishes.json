@@ -1,0 +1,30 @@
+[
+    {
+        "dishName": "Ayam Bakar",
+        "items": [],
+        "price": 4.99,
+        "recipe": [],
+        "currentDiscount": 0
+    },
+    {
+        "dishName": "Hainanese Steamed Chicken",
+        "items": [],
+        "price": 17.95,
+        "recipe": [],
+        "currentDiscount": 0
+    },
+    {
+        "dishName": "Fish 'n' Chips",
+        "items": [],
+        "price": 28.99,
+        "recipe": [],
+        "currentDiscount": 0
+    },
+    {
+        "dishName": "Crispy Wanton",
+        "items": [],
+        "price": 10.0,
+        "recipe": [],
+        "currentDiscount": 0
+    }
+]
